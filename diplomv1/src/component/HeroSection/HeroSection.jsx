@@ -1,9 +1,9 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './HeroSection.css';
 import { LogIn, UserRound } from 'lucide-react';
 import Modal from '../Modal/Modal';
-import { useNavigate } from "react-router-dom"; 
-import ContactSection from '../ContactSection/ContactSection'; 
+import { useNavigate } from "react-router-dom";
+import ContactSection from '../ContactSection/ContactSection';
 
 
 
@@ -16,19 +16,19 @@ const HeroSection = () => {
     const [heroSubtitle, setHeroSubtitle] = useState("");
     const scrollToContact = () => {
         const section = document.getElementById('contact-section');
-            if (section) {
-            section.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start',     
+        if (section) {
+            section.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
             });
         };
     }
     const navigate = useNavigate();
     useEffect(() => {
-         const storedUser = localStorage.getItem("user");
-            if (storedUser) {
-                setUser(JSON.parse(storedUser));
-            }
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
         // Генерация частиц
         const particlesArray = Array.from({ length: 20 }, (_, i) => ({
             id: i,
@@ -39,52 +39,52 @@ const HeroSection = () => {
         }));
         setParticles(particlesArray);
 
-        fetch("http://localhost:3001/content")
-        .then(res => res.json())
-        .then(data => {
-            if (data) {
-                setHeroTitle(data.heroTitle || "Заголовок");
-                setHeroSubtitle(data.heroSubtitle || "Подзаголовок");
-            }
-        })
-        .catch(err => console.error("Ошибка загрузки контента:", err));
+        fetch("http://109.172.38.23/content")
+            .then(res => res.json())
+            .then(data => {
+                if (data) {
+                    setHeroTitle(data.heroTitle || "Заголовок");
+                    setHeroSubtitle(data.heroSubtitle || "Подзаголовок");
+                }
+            })
+            .catch(err => console.error("Ошибка загрузки контента:", err));
     }, []);
     const handleLoginSuccess = (userData) => {
-            console.log("handleLoginSuccess userData:", userData);
-            setUser(userData);
-            setIsModalActive(false);
-            localStorage.setItem("user", JSON.stringify(userData));
-            localStorage.setItem('token');
-            if (userData.role === "ADMIN") {
-                navigate("/admin");
-            }else{
-                navigate("/")
-            }
-        };
+        console.log("handleLoginSuccess userData:", userData);
+        setUser(userData);
+        setIsModalActive(false);
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem('token');
+        if (userData.role === "ADMIN") {
+            navigate("/admin");
+        } else {
+            navigate("/")
+        }
+    };
     const handleLogout = () => {
-            localStorage.removeItem("user");
-            localStorage.removeItem('token');
-            setUser(null);
-            setMenuOpen(true);
-            navigate("/");
-        };
+        localStorage.removeItem("user");
+        localStorage.removeItem('token');
+        setUser(null);
+        setMenuOpen(true);
+        navigate("/");
+    };
 
-        
+
     return (
         <div className="Hero">
             {/* Плавающие волны */}
             <div className="wave"></div>
             <div className="wave"></div>
-             {!user ? (
+            {!user ? (
                 <button className="login-btn" onClick={() => setIsModalActive(true)}>
-                <LogIn size={18} />
-                <span>Войти</span>
+                    <LogIn size={18} />
+                    <span>Войти</span>
                 </button>
             ) : (
-                <div className="user-info"onClick={() => setMenuOpen(prev => !prev)}>
-                    <UserRound size={18}/>
+                <div className="user-info" onClick={() => setMenuOpen(prev => !prev)}>
+                    <UserRound size={18} />
                     <span>{user.name}</span>
-                     {menuOpen && (
+                    {menuOpen && (
                         <div className="dropdown-menu">
                             <button onClick={() => navigate('/profile')}>Профиль</button>
                             {user?.role === 'ADMIN' && (
@@ -97,12 +97,12 @@ const HeroSection = () => {
                     )}
                 </div>
             )}
-            <Modal active = {modalActive} setActive ={setIsModalActive} setUser={setUser} onLoginSuccess={handleLoginSuccess}>
-                    
+            <Modal active={modalActive} setActive={setIsModalActive} setUser={setUser} onLoginSuccess={handleLoginSuccess}>
+
             </Modal>
             {/* Плавающие частицы */}
             {particles.map(particle => (
-                <div 
+                <div
                     key={particle.id}
                     className="particle"
                     style={{

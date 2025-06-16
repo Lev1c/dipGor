@@ -33,15 +33,15 @@ export default function DashboardTab() {
 
   useEffect(() => {
     const defaultStats = {
-        totalApplications: 0,
-        newApplications: 0,
-        inProgressApplications: 0,
-        doneApplications: 0,
-        totalUsers: 0,
-        totalServices: 0,
-        recentApplications: []
+      totalApplications: 0,
+      newApplications: 0,
+      inProgressApplications: 0,
+      doneApplications: 0,
+      totalUsers: 0,
+      totalServices: 0,
+      recentApplications: []
     };
-    fetch("http://localhost:3001/dashboard/stats")
+    fetch("http://109.172.38.23/dashboard/stats")
       .then((res) => res.json())
       .then((data) => setStats({ ...defaultStats, ...data }))
       .catch((err) => console.error("Ошибка загрузки данных:", err));
@@ -73,16 +73,16 @@ export default function DashboardTab() {
         <div className="leads-list">
           {Array.isArray(stats.recentApplications) &&
             stats.recentApplications.map((lead) => (
-                <div className="lead-item" key={lead.id}>
+              <div className="lead-item" key={lead.id}>
                 <div>
-                    <p className="lead-name">{lead.name}</p>
-                    <p className="lead-email">{lead.email}</p>
-                    <p className="lead-date">{new Date(lead.createdAt).toLocaleDateString("ru-RU")}</p>
+                  <p className="lead-name">{lead.name}</p>
+                  <p className="lead-email">{lead.email}</p>
+                  <p className="lead-date">{new Date(lead.createdAt).toLocaleDateString("ru-RU")}</p>
                 </div>
                 <span className={`badge ${getStatusColor(lead.status)}`}>
-                    {getStatusText(lead.status)}
+                  {getStatusText(lead.status)}
                 </span>
-                </div>
+              </div>
             ))}
         </div>
       </div>

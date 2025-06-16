@@ -1,6 +1,6 @@
 import "./Leads.css";
 import { Filter, Download, Search, Mail, Phone, Calendar, Eye, Edit, Trash2, X, Check } from "lucide-react";
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import jsPDF from "jspdf";
 import { RobotoRegular } from "./Roboto-Regular.ttf-normal.js";
 
@@ -41,39 +41,39 @@ const LeadsTab = () => {
   }, []);
 
   const fetchLeads = () => {
-    fetch("http://localhost:3001/applications")
+    fetch("http://109.172.38.23/applications")
       .then(res => res.json())
       .then(data => setLeads(data))
       .catch(console.error);
   };
 
   const filteredLeads = leads.filter(lead => {
-  const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        lead.message.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.message.toLowerCase().includes(searchTerm.toLowerCase());
 
-  const matchesStatus = statusFilter ? lead.status === statusFilter : true;
+    const matchesStatus = statusFilter ? lead.status === statusFilter : true;
 
-  return matchesSearch && matchesStatus;
-});
+    return matchesSearch && matchesStatus;
+  });
   const getSourceName = (source) => {
-  const sourceMap = {
-    ads: "Контекстная реклама",
-    smm: "SMM",
-    email: "Email-маркетинг",
-    direct: "Прямые обращения",
-  };
-  return sourceMap[source] || "Форма сайта";
-}
+    const sourceMap = {
+      ads: "Контекстная реклама",
+      smm: "SMM",
+      email: "Email-маркетинг",
+      direct: "Прямые обращения",
+    };
+    return sourceMap[source] || "Форма сайта";
+  }
 
   // Удаление заявки
   const handleDelete = async (id) => {
     if (!window.confirm("Удалить заявку?")) return;
     try {
-      await fetch(`http://localhost:3001/applications/${id}`, { method: "DELETE" });
+      await fetch(`http://109.172.38.23/applications/${id}`, { method: "DELETE" });
       setLeads(leads.filter(lead => lead.id !== id));
     } catch (e) {
-        console.error(e);
+      console.error(e);
       alert("Ошибка удаления");
     }
   };
@@ -92,15 +92,15 @@ const LeadsTab = () => {
     setEditMessage("");
   };
 
-    const toggleStatusFilter = (status) => {
-        setStatusFilter(prev => prev === status ? "" : status);
-        setShowFilterMenu(false);
+  const toggleStatusFilter = (status) => {
+    setStatusFilter(prev => prev === status ? "" : status);
+    setShowFilterMenu(false);
   };
 
   // Сохранить изменения
   const saveEdit = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3001/applications/${id}`, {
+      const res = await fetch(`http://109.172.38.23/applications/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: editStatus, message: editMessage }),
@@ -119,48 +119,47 @@ const LeadsTab = () => {
     setViewingLead(lead);
   };
   const closeView = () => setViewingLead(null);
-/////////////
-/////////////
-/////////////
-/////////////
-/////////////
-    jsPDF.API.events.push([
-  "addFonts",
-  function () {
-    this.addFileToVFS("Roboto-Regular.ttf", RobotoRegular);
-    this.addFont("Roboto-Regular.ttf", "Roboto", "normal");
-  },
-]);
+  /////////////
+  /////////////
+  /////////////
+  /////////////
+  /////////////
+  jsPDF.API.events.push([
+    "addFonts",
+    function () {
+      this.addFileToVFS("Roboto-Regular.ttf", RobotoRegular);
+      this.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+    },
+  ]);
 
-const exportToPDF = () => {
-  const doc = new jsPDF();
-  doc.setFont("Roboto");
-  doc.setFontSize(14);
-  doc.text("Заявки (клиент, контакты, сообщение)", 14, 18);
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFont("Roboto");
+    doc.setFontSize(14);
+    doc.text("Заявки (клиент, контакты, сообщение)", 14, 18);
 
-  let y = 30;
-  leads.forEach((lead, index) => {
-    const lines = [
-      `Клиент: ${lead.name}`,
-      `Email: ${lead.email}`,
-      `Телефон: ${lead.phone}`,
-      `Сообщение: ${
-        lead.message.length > 100 ? lead.message.slice(0, 97) + "…" : lead.message
-      }`,
-      "",
-    ];
-    lines.forEach((line) => {
-      doc.text(line, 14, y);
-      y += 10;
+    let y = 30;
+    leads.forEach((lead, index) => {
+      const lines = [
+        `Клиент: ${lead.name}`,
+        `Email: ${lead.email}`,
+        `Телефон: ${lead.phone}`,
+        `Сообщение: ${lead.message.length > 100 ? lead.message.slice(0, 97) + "…" : lead.message
+        }`,
+        "",
+      ];
+      lines.forEach((line) => {
+        doc.text(line, 14, y);
+        y += 10;
+      });
+      if (y > 270 && index !== leads.length - 1) {
+        doc.addPage();
+        y = 20;
+      }
     });
-    if (y > 270 && index !== leads.length - 1) {
-      doc.addPage();
-      y = 20;
-    }
-  });
-  doc.save("leads_export.pdf");
-};
-    const exportSingleLeadToPDF = (lead) => {
+    doc.save("leads_export.pdf");
+  };
+  const exportSingleLeadToPDF = (lead) => {
     const doc = new jsPDF();
 
     doc.setFont("Roboto", "normal"); // <-- правильное имя шрифта
@@ -168,57 +167,57 @@ const exportToPDF = () => {
     doc.text("Данные заявки", 14, 18);
 
     const lines = [
-        `Клиент: ${lead.name}`,
-        `Email: ${lead.email}`,
-        `Телефон: ${lead.phone}`,
-        `Сообщение: ${lead.message}`
+      `Клиент: ${lead.name}`,
+      `Email: ${lead.email}`,
+      `Телефон: ${lead.phone}`,
+      `Сообщение: ${lead.message}`
     ];
     lines.forEach((line, index) => {
-        doc.text(line, 14, 30 + index * 10);
+      doc.text(line, 14, 30 + index * 10);
     });
 
     doc.save(`Заявка_${lead.name || "клиент"}.pdf`);
-};
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (modalRef.current && !modalRef.current.contains(event.target)) {
-            setViewingLead(null);
-            }
-        };
-        const handleEscape = (event) => {
-            if (event.key === "Escape") {
-            setViewingLead(null);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        document.addEventListener("keydown", handleEscape);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-            document.removeEventListener("keydown", handleEscape);
-        };
-    }, []);
+  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setViewingLead(null);
+      }
+    };
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setViewingLead(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   return (
     <div className="leads-wrapper">
       <div className="leads-header">
         <h2>Управление заявками</h2>
         <div className="leads-buttons">
-            <div className="filter-dropdown">
-                <button className={`btn-outline ${statusFilter ? "active" : ""}`}
-                onClick={() => setShowFilterMenu(prev => !prev)}>
-                <Filter size={16} />
-                <span>Фильтр</span>
-          </button>
+          <div className="filter-dropdown">
+            <button className={`btn-outline ${statusFilter ? "active" : ""}`}
+              onClick={() => setShowFilterMenu(prev => !prev)}>
+              <Filter size={16} />
+              <span>Фильтр</span>
+            </button>
             {showFilterMenu && (
-                <div className={`filter-menu ${showFilterMenu ? "show" : ""}`}>
-                    <div onClick={() => toggleStatusFilter("NEW")} className={statusFilter === "NEW" ? "selected" : ""}>Новая</div>
-                    <div onClick={() => toggleStatusFilter("IN_PROGRESS")} className={statusFilter === "IN_PROGRESS" ? "selected" : ""}>В процессе</div>
-                    <div onClick={() => toggleStatusFilter("DONE")} className={statusFilter === "DONE" ? "selected" : ""}>Завершена</div>
-                    <div onClick={() => toggleStatusFilter("")} className={statusFilter === "" ? "selected" : ""}>Сбросить</div>
-                </div>
+              <div className={`filter-menu ${showFilterMenu ? "show" : ""}`}>
+                <div onClick={() => toggleStatusFilter("NEW")} className={statusFilter === "NEW" ? "selected" : ""}>Новая</div>
+                <div onClick={() => toggleStatusFilter("IN_PROGRESS")} className={statusFilter === "IN_PROGRESS" ? "selected" : ""}>В процессе</div>
+                <div onClick={() => toggleStatusFilter("DONE")} className={statusFilter === "DONE" ? "selected" : ""}>Завершена</div>
+                <div onClick={() => toggleStatusFilter("")} className={statusFilter === "" ? "selected" : ""}>Сбросить</div>
+              </div>
             )}
-            </div>
-          <button className="btn-outline"onClick={exportToPDF}>
+          </div>
+          <button className="btn-outline" onClick={exportToPDF}>
             <Download size={16} />
             <span>Экспорт</span>
           </button>
@@ -264,36 +263,36 @@ const exportToPDF = () => {
                       <Phone size={12} /> {lead.phone}
                     </div>
                   </td>
-                        <td className="truncate" onClick={() => {
-                                if (editingId !== lead.id) startEdit(lead);
-                                }}>
-                                {editingId === lead.id ? (
-                                <textarea
-                                value={editMessage}
-                                onChange={(e) => setEditMessage(e.target.value)}
-                                rows={3}
-                                autoFocus
-                                onClick={(e) => e.stopPropagation()} // предотврати повторный вызов startEdit
-                                />
-                            ) : (
-                                lead.message
-                            )}
-                        </td>
+                  <td className="truncate" onClick={() => {
+                    if (editingId !== lead.id) startEdit(lead);
+                  }}>
+                    {editingId === lead.id ? (
+                      <textarea
+                        value={editMessage}
+                        onChange={(e) => setEditMessage(e.target.value)}
+                        rows={3}
+                        autoFocus
+                        onClick={(e) => e.stopPropagation()} // предотврати повторный вызов startEdit
+                      />
+                    ) : (
+                      lead.message
+                    )}
+                  </td>
                   <td className="date">
                     <Calendar size={12} /> {new Date(lead.createdAt).toLocaleDateString("ru-RU")}
                   </td>
                   <td>{editingId === lead.id ? (
-                        <select
-                            value={editStatus}
-                            onChange={(e) => setEditStatus(e.target.value)}
-                        >
-                            <option value="NEW">Новая</option>
-                            <option value="IN_PROGRESS">В процессе</option>
-                            <option value="DONE">Завершена</option>
-                        </select>
-                        ) : (
-                            <span className={getStatusClass(lead.status)}>{getStatusText(lead.status)}</span>)}
-                    </td>
+                    <select
+                      value={editStatus}
+                      onChange={(e) => setEditStatus(e.target.value)}
+                    >
+                      <option value="NEW">Новая</option>
+                      <option value="IN_PROGRESS">В процессе</option>
+                      <option value="DONE">Завершена</option>
+                    </select>
+                  ) : (
+                    <span className={getStatusClass(lead.status)}>{getStatusText(lead.status)}</span>)}
+                  </td>
                   <td>{getSourceName(lead.source)}</td>
                   <td>
                     <div className="action-buttons">
@@ -319,7 +318,7 @@ const exportToPDF = () => {
           {/* Модалка просмотра */}
           {viewingLead && (
             <div className="modal-backdrop">
-                <div className="modal-content" ref={modalRef}>
+              <div className="modal-content" ref={modalRef}>
                 <h3>Просмотр заявки</h3>
                 <p><strong>Клиент:</strong> {viewingLead.name}</p>
                 <p><strong>Email:</strong> {viewingLead.email}</p>
@@ -329,15 +328,15 @@ const exportToPDF = () => {
                 <p><strong>Статус:</strong> {getStatusText(viewingLead.status)}</p>
                 <button className="btn-close" onClick={closeView}>Закрыть</button>
                 <button
-                        className="btn-outlineModal"
-                        onClick={() => exportSingleLeadToPDF(viewingLead)}
-                    >
-                        <Download size={16} style={{ marginRight: 6 }} />
-                        Экспорт в PDF
-                    </button>
-                </div>
+                  className="btn-outlineModal"
+                  onClick={() => exportSingleLeadToPDF(viewingLead)}
+                >
+                  <Download size={16} style={{ marginRight: 6 }} />
+                  Экспорт в PDF
+                </button>
+              </div>
             </div>
-            )}
+          )}
         </div>
       </div>
     </div>
