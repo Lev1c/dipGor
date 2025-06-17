@@ -7,7 +7,7 @@ export const ContentProvider = ({ children }) => {
   const [contentId, setContentId] = useState(null);
 
   useEffect(() => {
-    fetch("http://109.172.38.23/content")
+    fetch("/api/content")
       .then((res) => res.json())
       .then((data) => {
         if (data) {

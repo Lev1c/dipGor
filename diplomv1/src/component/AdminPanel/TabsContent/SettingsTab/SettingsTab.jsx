@@ -16,7 +16,7 @@ const SettingsTab = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://109.172.38.23/users");
+      const res = await fetch("/api/users");
       const data = await res.json();
       setUsers(data);
     } catch (err) {
@@ -28,7 +28,7 @@ const SettingsTab = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm("Удалить пользователя?")) {
-      await fetch(`http://109.172.38.23/users/${id}`, {
+      await fetch(`/api/users/${id}`, {
         method: "DELETE",
       });
       fetchUsers();
@@ -41,7 +41,7 @@ const SettingsTab = () => {
   };
 
   const handleSave = async (id) => {
-    await fetch(`http://109.172.38.23/users/${id}`, {
+    await fetch(`/api/users/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editedUser),

@@ -105,7 +105,7 @@ function LeadDetails() {
     };
 
     try {
-      const response = await fetch("http://109.172.38.23/applications", {
+      const response = await fetch("/api/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend),

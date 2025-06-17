@@ -13,7 +13,7 @@ const ManageContent = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://109.172.38.23/content")
+    fetch("/api/content")
       .then(res => res.json())
       .then(data => {
         if (data && data.id) {
@@ -40,7 +40,7 @@ const ManageContent = () => {
       return;
     }
     try {
-      const res = await fetch(`http://109.172.38.23/content/${contentId}`, {
+      const res = await fetch(`/api/content/${contentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

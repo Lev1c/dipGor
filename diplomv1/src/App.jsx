@@ -25,7 +25,7 @@ function App() {
     setLoadingUser(false);
   }, []);
   useEffect(() => {
-    fetch("http://109.172.38.23/content")
+    fetch("/api/content")
       .then(res => res.json())
       .then(data => {
         setContent(data);
