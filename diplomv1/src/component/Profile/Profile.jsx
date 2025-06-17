@@ -16,7 +16,7 @@ const Profile = ({ user, setUser }) => {
   // Загрузка заявок пользователя
   useEffect(() => {
     if (user?.id) {
-      fetch(`/api/applications?userId=${user.id}`)
+      fetch(`http://109.172.38.23:3001/applications?userId=${user.id}`)
         .then(res => {
           if (!res.ok) throw new Error('Ошибка загрузки заявок');
           return res.json();
@@ -37,7 +37,7 @@ const Profile = ({ user, setUser }) => {
   }, [user]);
 
   const handleUpdateProfile = () => {
-    fetch(`/api/users/${user.id}`, {
+    fetch(`http://109.172.38.23:3001/users/${user.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
